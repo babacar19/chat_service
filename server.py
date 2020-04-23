@@ -40,12 +40,19 @@ class Receveur(threading.Thread):
         print("message recu : " + msg.message)
         """"""
         target = msg.target
+        trouve = 0
         for client in self.client_connectes:
             print("comparaison ",client[1][0],target)
             if client[1] == target:
                 msg_obj = msg.pick_msg()
                 client[0].sendall(msg_obj)
-            break
+                trouve = 1
+                break
+        if(trouve == 0):
+            err_msg= message()
+            err_msg.message = "ce client n'est pas connecté "
+            self.sockClient.sendall(err_msg.pick_msg())
+
         pass
 
 
